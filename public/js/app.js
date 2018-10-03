@@ -1,18 +1,22 @@
-const APIKEY = '9dff6a76a3214010abbeb89d9f90a332'
-const COUNTRIES = {
-    none: 'Elija país',
-    ar: 'Argentina',
-    br: 'Brazil',
-    us: 'United States',
-    jp: 'Japan'
-};
+import { APIKEY, COUNTRIES } from "./constants.js";
+
+// HTML Import
+
+const link = document.querySelector('link[rel=import]');
+const content = link.import.querySelector('a');
+document.body.appendChild(document.importNode(content, true));
+
+
+// Intercations
+
 
 const addNews = (shadowRoot, article) => {
     const thisTemplate = document.createElement('template');
     thisTemplate.innerHTML = `
         <news-box url="${article.url}">
             <h5>${article.title}</h5>
-            <div>${article.source.name}</div>
+            <div>${article.description ? article.description : ''}</div>
+            <h6>${article.source.name}</h6>
         </neews-box>
     `;
     shadowRoot.appendChild(thisTemplate.content.cloneNode(true));
@@ -23,14 +27,13 @@ let newsContainerShadow;
 const addCountries = (country) => {
     const url = `https://newsapi.org/v2/top-headlines?` +
         `country=${country}&` +
-        `apiKey=9dff6a76a3214010abbeb89d9f90a332`;
+        `apiKey=${APIKEY}`;
     const req = new Request(url);
     fetch(req)
         .then((response) => {
             response.json().then(news => {
                 console.log(news.articles);
                 removeNews()
-                this.news = true;
                 news.articles.forEach((article) => addNews(newsContainerShadow, article))
             });
         });
