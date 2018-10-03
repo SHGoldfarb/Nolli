@@ -52,7 +52,7 @@ const removeNews = () => {
 window.customElements.define('news-container', class NewsContainer extends HTMLElement {
     set news(val) {
         if (val) {
-            this.setAttribute('news', true)
+            this.setAttribute('news', true);
         }
     }
     constructor() {
