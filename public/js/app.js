@@ -1,5 +1,6 @@
 const APIKEY = '9dff6a76a3214010abbeb89d9f90a332'
 const COUNTRIES = {
+    none: 'Elija país',
     ar: 'Argentina',
     br: 'Brazil',
     us: 'United States',
@@ -84,14 +85,21 @@ window.customElements.define('news-box', class NewsBox extends HTMLElement {
 window.customElements.define('country-selector', class CountrySelector extends HTMLElement {
     constructor() {
         super();
-
         const shadowRoot = this.attachShadow({ mode: 'open' });
-        shadowRoot.innerHTML = `
+        // ['css/styles.css', 'css/materialize.css'].forEach((style => {
+        //     const stylesLink = document.createElement('link');
+        //     stylesLink.setAttribute('rel', 'stylesheet');
+        //     stylesLink.setAttribute('href', style);
+        //     shadowRoot.appendChild(stylesLink.cloneNode(true));
+        // }));
+        shadowRoot.innerHTML += `
             <select>
                 ${Object.entries(COUNTRIES).map(([key, value]) =>
                 `<option value="${key}">${value}</option>`).join('')}
             </select >
     `;
+
+
         console.log('country-selector defined');
         const selector = shadowRoot
             .querySelector('select');
