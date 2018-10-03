@@ -1,0 +1,28 @@
+
+/* $color1: rgba(5, 102, 141, 1); */
+/* $color2: rgba(2, 128, 144, 1); */
+/* $color3: rgba(0, 168, 150, 1); */
+/* $color4: rgba(2, 195, 154, 1); */
+/* $color5: rgba(240, 243, 189, 1); */
+
+
+news-box:hover {
+    cursor: pointer;
+    background-color: rgba(5, 102, 141, 1);
+}
+
+news-box {
+    display: block;
+    margin: 10px;
+    padding: 5px;
+    background-color: rgba(2, 128, 144, 1);
+    color: white;
+}
+
+news-container {
+    display: block;
+}
+
+country-selector {
+    display: block;
+}
