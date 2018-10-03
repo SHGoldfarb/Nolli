@@ -17,6 +17,34 @@ const addNews = (shadowRoot, article) => {
     shadowRoot.appendChild(thisTemplate.content.cloneNode(true));
 }
 
+let newsContainerShadow;
+
+const addCountries = (country) => {
+    const url = `https://newsapi.org/v2/top-headlines?` +
+        `country=${country}&` +
+        `apiKey=9dff6a76a3214010abbeb89d9f90a332`;
+    const req = new Request(url);
+    fetch(req)
+        .then((response) => {
+            response.json().then(news => {
+                console.log(news.articles);
+                removeNews()
+                this.news = true;
+                news.articles.forEach((article) => addNews(newsContainerShadow, article))
+            });
+        });
+};
+
+const removeNews = () => {
+    let newsBox = newsContainerShadow.querySelector('news-box');
+    console.log(newsBox);
+    while (newsBox) {
+        newsContainerShadow.removeChild(newsBox);
+        newsBox = newsContainerShadow.querySelector('news-box');
+    }
+
+}
+
 window.customElements.define('news-container', class NewsContainer extends HTMLElement {
     set news(val) {
         if (val) {
@@ -26,27 +54,16 @@ window.customElements.define('news-container', class NewsContainer extends HTMLE
     constructor() {
         super();
 
-        const shadowRoot = this.attachShadow({ mode: 'open' });
+        newsContainerShadow = this.attachShadow({ mode: 'open' });
 
         ['css/styles.css', 'css/materialize.css'].forEach((style => {
             const stylesLink = document.createElement('link');
             stylesLink.setAttribute('rel', 'stylesheet');
             stylesLink.setAttribute('href', style);
-            shadowRoot.appendChild(stylesLink.cloneNode(true));
+            newsContainerShadow.appendChild(stylesLink.cloneNode(true));
         }))
 
-        const url = 'https://newsapi.org/v2/top-headlines?' +
-            'country=ar&' +
-            'apiKey=9dff6a76a3214010abbeb89d9f90a332';
-        const req = new Request(url);
-        fetch(req)
-            .then((response) => {
-                response.json().then(news => {
-                    console.log(news.articles);
-                    this.news = true;
-                    news.articles.forEach((article) => addNews(shadowRoot, article))
-                });
-            });
+        console.log('news-container defined');
 
     }
 });
@@ -67,12 +84,21 @@ window.customElements.define('news-box', class NewsBox extends HTMLElement {
 window.customElements.define('country-selector', class CountrySelector extends HTMLElement {
     constructor() {
         super();
-        this.innerHTML = `
+
+        const shadowRoot = this.attachShadow({ mode: 'open' });
+        shadowRoot.innerHTML = `
             <select>
-                ${Object.entries(COUNTRIES).map((key, name) =>
-                `<option value="${key}">${name}</option>`).join('')}
-            </select>
-        `;
-        console.log('country-selector defined')
+                ${Object.entries(COUNTRIES).map(([key, value]) =>
+                `<option value="${key}">${value}</option>`).join('')}
+            </select >
+    `;
+        console.log('country-selector defined');
+        const selector = shadowRoot
+            .querySelector('select');
+
+
+        selector.addEventListener('change', () => {
+            addCountries(selector.value);
+        });
     }
 })
